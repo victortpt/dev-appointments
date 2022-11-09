@@ -18,7 +18,7 @@ Herramienta de auditorias de vulnerabilidades del gestor npm
 npm audit
 ```
 
-#### Npm audit fix
+*Npm audit fix*
 
 Esta opción se utlizará cuando tengamos vulnerabilidades en nuestras dependencias y querramos resolverlas de forma automática.
 
@@ -31,3 +31,24 @@ En el caso de no poder llegar a resolverlas, se podrá optar por el flag `--forc
 ```bash
 npm audit fix --force
 ```
+
+*Trucos npm audit*
+
+- Si necesitamos filtrar la salidad del audit podemos hacer un grep
+
+```
+npm audit | grep -E "(Severity: critical)" -B3 -A10
+```
+
+- Si queremos obtener difrentes nivel de vulnerabilidad: --audit-level=[nivel]
+
+```
+npm audit --audit-level=high
+```
+
+- Mostrar la información en formato json con la opción --json
+
+```
+npm audit --json --audit-level=high
+```
+
