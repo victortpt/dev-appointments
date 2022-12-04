@@ -1253,3 +1253,113 @@ Creación de entorno virtualenv Python (https://davidcasr.medium.com/c%C3%B3mo-c
 Vídeo de buenas prácticas en youtube (https://www.youtube.com/watch?v=OSGv2VnC0go&t=1666s)
 
 Debugger de Pycharm, Jetbrains Docs (https://www.jetbrains.com/help/pycharm/part-1-debugging-python-code.html#hex-format)
+
+
+
+## FastAPI
+
+Se trata de un pequeño framework en Python que destaca por su facilidad de uso y rendimiento. Es relativamente nuevo pero ya está compitiendo con soluciones más asentadas como Flask o Django
+
+```
+
+```
+
+### Ejemplo sencillo
+
+Un fichero *main/py*
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+```
+
+En la *terminal*. (Necesitarás instalar los requirements con pip)
+
+```
+ pip install fastapi
+```
+
+```
+pip install "uvicorn[standard]"
+``` 
+
+Ejecutamos el main con el servidor uvicorn
+```
+uvicorn main:app --reload
+```
+
+Accederemos a [localhost](http://127.0.0.1:8000) en el puerto 8000 y verás el mensaje Hello World
+
+También podrás acceder a *Openapi* para ver la documentación de tus rutas a los endopoints.
+
+http://127.0.0.1:8000/docs
+
+http://127.0.0.1:8000/redoc
+
+De la misma manera podrás consultar en formato raw la información que te ofrece openapi en: 
+
+http://127.0.0.1:8000/openapi.json
+
+### API completa ejemplo
+
+Modificaremos el fichero *main.py* para tener una operacion *GET* y *PUT*
+
+
+Podremos declarar un modelo gracias a *pydantic*
+
+```Python hl_lines="4  9-12  25-27"
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+
+class Item(BaseModel):
+    name: str
+    price: float
+    is_offer: bool | None = None
+
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: str | None = None):
+    return {"item_id": item_id, "q": q}
+
+
+@app.put("/items/{item_id}")
+def update_item(item_id: int, item: Item):
+    return {"item_name": item.name, "item_id": item_id}
+```
+
+Si guardamos la opción *--reload* de uvicorn debería de actualizarnos los cambios
+
+Vamos a <a href="http://127.0.0.1:8000/docs" class="external-link" target="_blank">http://127.0.0.1:8000/docs</a>.
+
+* Aparecerán las nuevas operaciones de la API
+
+![Swagger UI](https://fastapi.tiangolo.com/img/index/index-03-swagger-02.png)
+
+* Si abrimos en una de ellas y clicamos en *Try it out* nos mostrará la info y posibles parámetros
+
+![Swagger UI interaction](https://fastapi.tiangolo.com/img/index/index-04-swagger-03.png)
+
+* Finalmente lo ejecutaremos en *Execute*
+
+![Swagger UI interaction](https://fastapi.tiangolo.com/img/index/index-05-swagger-04.png)
+
+
+
+
+
+
